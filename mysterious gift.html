@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Wishes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tone@14.9.11/build/Tone.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background-color: #0d0d0d;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9NiHRyoK1j3FZDcbJ95MpDLmpKVjtGnvOFw&s');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Keeps the background static while scrolling */
+        }
+        .intro-page-animation {
+            animation: bounce-in 1s ease-out;
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.25em;
+            background-color: #fff;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 text-white">
+
+    <!-- First page - Intro and interaction -->
+    <div id="introPage" class="w-full h-full flex items-center justify-center text-center cursor-pointer">
+        <div class="intro-page-animation max-w-md w-full p-8 bg-gray-900/80 rounded-2xl shadow-2xl">
+            <h1 class="text-2xl sm:text-3xl font-bold text-cyan-400 leading-tight mb-4">
+                <span class="text-gray-500">//</span> New Message Detected
+            </h1>
+            <div class="text-xl sm:text-2xl my-4 text-green-400">
+                <p>C:\>_</p>
+            </div>
+            
+            <!-- Clickable text -->
+            <p id="clickText" class="text-sm sm:text-lg text-yellow-400 leading-relaxed">
+                Click to run "open_message.exe"<span class="cursor"></span>
+            </p>
+
+            <!-- Loading sign (initially hidden) -->
+            <div id="loadingSign" class="flex flex-col items-center justify-center space-y-2 text-sm sm:text-lg text-green-500" style="display: none;">
+                <svg class="animate-spin h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second page - The thank you message (initially hidden) -->
+    <div id="thankYouPage" class="max-w-md w-full bg-gray-900/80 rounded-2xl shadow-2xl p-8 text-center transform transition-all duration-300 hover:scale-105" style="display: none;">
+        <div class="mb-6">
+            <svg class="w-16 h-16 mx-auto text-purple-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            </svg>
+        </div>
+        
+            <h1 class="text-xl sm:text-2xl font-extrabold text-pink-400 leading-tight mb-4">
+            <span class="text-gray-400"</span> function Thanks for wish me a birthday()
+        </h1>
+        
+        <!-- The message written in coding language -->
+        <div class="text-left text-base sm:text-lg leading-relaxed mb-6">
+            <p class="text-gray-500">// Initiating ThankYou_Protocol...</p>
+            <p><span class="text-cyan-400">const </span><span class="text-yellow-400">recipients = </span><span class="text-orange-400">"Friends & Family";</span></p>
+            <p><span class="text-cyan-400">const </span><span class="text-yellow-400">messageStatus = </span><span class="text-orange-400">"SUCCESS";</span></p>
+            <p><span class="text-cyan-400">const </span><span class="text-yellow-400">gratitudeLevel = </span><span class="text-pink-400">1000;</span></p>
+            <p><span class="text-cyan-400">const </span><span class="text-yellow-400">mainMessage = </span><span class="text-orange-400">"Each birthday I'm reminded of how many amazing people I have in my life.
+Thank you so much for all of the birthday wishes, you are greatly appreciated!🥰";</span></p>
+            <p class="mt-4"><span class="text-cyan-400">console.log</span><span class="text-yellow-400">(</span><span class="text-pink-400">mainMessage</span><span class="text-yellow-400">);</span></p>
+        </div>
+
+        <p class="text-sm sm:text-lg text-gray-400 font-light italic">
+            <br>
+            [Yuvraj singh❤️]
+        </p>
+    </div>
+
+    <!-- JavaScript to handle the page transition and speech -->
+    <script>
+        const introPage = document.getElementById('introPage');
+        const thankYouPage = document.getElementById('thankYouPage');
+        const clickText = document.getElementById('clickText');
+        const loadingSign = document.getElementById('loadingSign');
+
+        // Check for Web Speech API support
+        const isSpeechSupported = 'speechSynthesis' in window;
+        
+        // Define the hacker theme music sequence
+        const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sawtooth" },
+            envelope: {
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.2,
+                release: 0.5
+            }
+        }).toDestination();
+        
+        const musicSequence = new Tone.Sequence((time, note) => {
+            synth.triggerAttackRelease(note, "8n", time);
+        }, ["C3", ["E3", "G3"], "C3", "G3", "C4", "C3", "G3", "C4"]).start(0);
+        
+        // Set up the tempo
+        Tone.Transport.bpm.value = 120;
+        
+        // Listen for a click on the intro page
+        introPage.addEventListener('click', () => {
+            if (isSpeechSupported) {
+                // Show the loading sign and hide the click text
+                clickText.style.display = 'none';
+                loadingSign.style.display = 'flex';
+
+                const utterance = new SpeechSynthesisUtterance("Code is ready to run. Wait a second.");
+                
+                // Customize the voice to sound male, heavy, and slow
+                const voices = window.speechSynthesis.getVoices();
+                const maleVoice = voices.find(voice => voice.name.toLowerCase().includes('male') || voice.lang === 'en-US');
+                if (maleVoice) {
+                    utterance.voice = maleVoice;
+                }
+                
+                utterance.pitch = 0.5; // Lower pitch for a heavy sound
+                utterance.rate = 0.7;  // Slower rate for clarity
+
+                // Speak the message
+                window.speechSynthesis.speak(utterance);
+
+                // Wait for the sound to finish before showing the next page and starting music
+                utterance.onend = () => {
+                    introPage.style.display = 'none';
+                    thankYouPage.style.display = 'block';
+                    
+                    // Start the hacker theme music
+                    Tone.Transport.start();
+                };
+            } else {
+                // If speech is not supported, just transition immediately
+                introPage.style.display = 'none';
+                thankYouPage.style.display = 'block';
+                console.log("Web Speech API not supported. No voice will play.");
+            }
+        });
+    </script>
+
+</body>
+</html>
